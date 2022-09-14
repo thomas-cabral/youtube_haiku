@@ -16,7 +16,7 @@ class YoutubeScrape:
         self.base_url = url
         self.top_time_range = "&t=%s" % top_time_range
         self.fetch_limit = fetch_limit
-        self._url = url
+        self._url = url + self.top_time_range
 
     @property
     def url(self):
@@ -65,7 +65,8 @@ class YoutubeScrape:
                 link_set.add(a['href'])
 
         things = soup.find_all('div', id=lambda x: x and x.startswith('thing_'))
-        self.next_context = things[-1]['id'].replace('thing_', '')
+        if len(things) > 0:
+            self.next_context = things[-1]['id'].replace('thing_', '')
 
         return link_set
 
@@ -74,7 +75,7 @@ class YoutubeScrape:
         all_links = set()
         for page in range(0, int(self.fetch_limit / 25)):
             if n >= 25:
-                self.url = "%s&count=%s&after=%s" % (self.base_url, n, self.next_context)
+                self.url = "%s%s&count=%s&after=%s" % (self.base_url, self.top_time_range, n, self.next_context)
                 all_links.update(self.parse_youtube_links())
             else:
                 all_links.update(self.parse_youtube_links())
