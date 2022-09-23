@@ -40,13 +40,13 @@ class YoutubeScrape:
         if page.status_code == 200:
             return page.text
         else:
-            raise Exception("Requested URL failed: %i status code" % page.status_code)
+            raise RequestedUrlFailed("Requested URL failed: %i status code" % page.status_code)
 
     def get_or_retry(self):
         while True:
             try:
                 result = self.get_top_videos()
-            except Exception as e:
+            except RequestedUrlFailed as e:
                 print(e)
                 time.sleep(1)
             else:
@@ -81,3 +81,7 @@ class YoutubeScrape:
                 all_links.update(self.parse_youtube_links())
             n += 25
         return all_links
+
+
+class RequestedUrlFailed(Exception):
+    """Requested URL has failed to return 200"""
