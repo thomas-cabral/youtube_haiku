@@ -14,3 +14,7 @@ def get_top_by_range(time_range, amount):
         amount = 500
     result = YoutubeScrape(url, time_range, amount).get_links_for_period()
     return jsonify(list(result))
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001)
